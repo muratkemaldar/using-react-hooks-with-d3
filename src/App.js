@@ -9,18 +9,15 @@ function App() {
   // will be called initially and on every data change
   useEffect(() => {
     const svg = select(svgRef.current);
+
+    // generates the "d" attribute of a path element
     const myLine = line()
       .x((value, index) => index * 50)
       .y(value => 150 - value)
       .curve(curveCardinal);
-    // svg
-    //   .selectAll("circle")
-    //   .data(data)
-    //   .join("circle")
-    //   .attr("r", value => value)
-    //   .attr("cx", value => value * 2)
-    //   .attr("cy", value => value * 2)
-    //   .attr("stroke", "red");
+
+    // renders path element, and attaches
+    // the "d" attribute from line generator above
     svg
       .selectAll("path")
       .data([data])
