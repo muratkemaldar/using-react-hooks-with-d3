@@ -5,7 +5,7 @@ This is the code of the video tutorial series "Using React (Hooks) with D3".
 Each tutorial session is saved within a branch,
 so if you wanna work with the code from this repo, checkout the branches!
 
-This session is about the drawing a curved line chart. Learn about path elements, and using D3 to render a path element which is shaped like a line.
+This session is about added a X and a Y axis to our line chart from the last session.
 
 ## Getting Started
 
