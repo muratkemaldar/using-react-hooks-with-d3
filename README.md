@@ -1,11 +1,11 @@
-# Using React (Hooks) with D3 - [03] X & Y Axis
+# Using React (Hooks) with D3 - [04] Animated Bar Chart
 
 This is the code of the video tutorial series "Using React (Hooks) with D3".
 
 Each tutorial session is saved within a branch,
 so if you wanna work with the code from this repo, checkout the branches!
 
-This session is about added a X and a Y axis to our line chart from the last session.
+This session is about creating a bar chart, which is gonna be colored and animated!
 
 ## Getting Started
 
