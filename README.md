@@ -11,7 +11,7 @@ This session is about creating a bar chart, which is gonna be colored and animat
 
 `git clone git@github.com:muratkemaldar/using-react-hooks-with-d3.git`
 
-`git checkout 03-x-y-axis`
+`git checkout 04-bar-chart-animated`
 
 `npm install`
 
