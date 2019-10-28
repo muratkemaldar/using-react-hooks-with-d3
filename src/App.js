@@ -24,7 +24,6 @@ function App() {
       .clamp(true);
 
     const xAxis = axisBottom(xScale).ticks(data.length);
-
     svg
       .select(".x-axis")
       .style("transform", "translateY(150px)")
@@ -41,7 +40,6 @@ function App() {
       .data(data)
       .join("rect")
       .attr("class", "bar")
-
       .style("transform", "scale(1, -1)")
       .attr("x", (value, index) => xScale(index))
       .attr("y", -150)
@@ -62,6 +60,11 @@ function App() {
       </button>
       <button onClick={() => setData(data.filter(value => value < 35))}>
         Filter data
+      </button>
+      <button
+        onClick={() => setData([...data, Math.round(Math.random() * 100)])}
+      >
+        Add data
       </button>
     </React.Fragment>
   );
