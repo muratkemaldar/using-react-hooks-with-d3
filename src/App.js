@@ -9,6 +9,8 @@ function App() {
   // will be called initially and on every data change
   useEffect(() => {
     const svg = select(svgRef.current);
+
+    // scales
     const xScale = scaleBand()
       .domain(data.map((value, index) => index))
       .range([0, 300])
@@ -23,18 +25,21 @@ function App() {
       .range(["green", "orange", "red"])
       .clamp(true);
 
+    // create x-axis
     const xAxis = axisBottom(xScale).ticks(data.length);
     svg
       .select(".x-axis")
       .style("transform", "translateY(150px)")
       .call(xAxis);
 
+    // create y-axis
     const yAxis = axisRight(yScale);
     svg
       .select(".y-axis")
       .style("transform", "translateX(300px)")
       .call(yAxis);
 
+    // draw the bars
     svg
       .selectAll(".bar")
       .data(data)
