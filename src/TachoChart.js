@@ -32,7 +32,7 @@ function TachoChart({ data }) {
             .attr("class", "tacho")
             .attr("fill", (d, i) => (i ? "#ddd" : "#ffcc00"))
             .attr("d", arcGen)
-            .each(function(value, index) {
+            .each(function(value) {
               this.currentPieValue = value;
             }),
         update =>
