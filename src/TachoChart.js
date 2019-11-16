@@ -25,32 +25,30 @@ function TachoChart({ data }) {
     const slices = svg.selectAll(".tacho").data(arcs);
 
     slices
-      .enter()
-      .append("path")
-      .attr("class", "tacho")
+      .join(
+        enter =>
+          enter
+            .append("path")
+            .attr("class", "tacho")
+            .attr("fill", (d, i) => (i ? "#ddd" : "#ffcc00"))
+            .attr("d", arcGen)
+            .each(function(value, index) {
+              this.currentPieValue = value;
+            }),
+        update =>
+          update
+            .transition()
+            .duration(300)
+            .attrTween("d", function(value) {
+              const interpolator = interpolate(this.currentPieValue, value);
+              this.currentPieValue = interpolator(0);
+              return time => arcGen(interpolator(time));
+            })
+      )
       .style(
         "transform",
         `translate(${dimensions.width / 2}px, ${dimensions.height}px)`
-      )
-      // .attr("stroke", "black")
-      .attr("fill", (d, i) => (i ? "#ddd" : "#ffaa00"))
-      .attr("d", arcGen)
-      .each(function(d, i) {
-        this._current = d;
-      });
-
-    slices
-      .style(
-        "transform",
-        `translate(${dimensions.width / 2}px, ${dimensions.height}px)`
-      )
-      .transition()
-      .duration(300)
-      .attrTween("d", function(d) {
-        const i = interpolate(this._current, d);
-        this._current = i(0);
-        return t => arcGen(i(t));
-      });
+      );
 
     // draw the bars
   }, [data, dimensions]);

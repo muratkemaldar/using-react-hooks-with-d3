@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
 import ml5 from "ml5";
-import BarChart from "./BarChart";
 import TachoChart from "./TachoChart";
 import useInterval from "./useInterval";
 
@@ -9,7 +8,6 @@ let classifier;
 
 function App() {
   const videoRef = useRef();
-  const [data, setData] = useState([]);
   const [tachoData, setTachoData] = useState(0);
   const [classify, setClassify] = useState(false);
 
@@ -32,7 +30,6 @@ function App() {
           return;
         }
         setTachoData(results[0].confidence);
-        setData([...data, results[0].confidence]);
       });
     }
   }, 500);
@@ -41,7 +38,6 @@ function App() {
     <React.Fragment>
       <h1>Hello ML5</h1>
       <TachoChart data={tachoData} />
-      {/* <BarChart data={data} /> */}
       <button onClick={() => setClassify(!classify)}>
         {classify ? "Stop classifying" : "Start classifying"}
       </button>
