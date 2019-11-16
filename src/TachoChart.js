@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { select, interpolate, scaleLinear, arc, pie } from "d3";
+import { select, interpolate, arc, pie } from "d3";
 import useResizeObserver from "./useResizeObserver";
 
 function TachoChart({ data }) {
@@ -17,8 +17,9 @@ function TachoChart({ data }) {
       .outerRadius(150);
 
     const pieGen = pie()
-      .startAngle(0)
-      .endAngle(2 * Math.PI);
+      .startAngle(-0.5 * Math.PI)
+      .endAngle(0.5 * Math.PI)
+      .sort(null);
 
     const arcs = pieGen([data, 1 - data]);
     const slices = svg.selectAll(".tacho").data(arcs);
@@ -31,23 +32,25 @@ function TachoChart({ data }) {
         "transform",
         `translate(${dimensions.width / 2}px, ${dimensions.height}px)`
       )
-      .attr("stroke", "black")
-      .attr("fill", "none")
+      // .attr("stroke", "black")
+      .attr("fill", (d, i) => (i ? "#ddd" : "#ffaa00"))
       .attr("d", arcGen)
       .each(function(d, i) {
-        // console.warn("each >>", d.startAngle);
         this._current = d;
       });
 
-    slices.transition().attrTween("d", function(d) {
-      var interpolator = interpolate(this._current, d);
-      console.warn("arct >>", this._current.startAngle, d.startAngle);
-      var _this = this;
-      return function(t) {
-        _this._current = interpolator(t);
-        return arcGen(_this._current);
-      };
-    });
+    slices
+      .style(
+        "transform",
+        `translate(${dimensions.width / 2}px, ${dimensions.height}px)`
+      )
+      .transition()
+      .duration(300)
+      .attrTween("d", function(d) {
+        const i = interpolate(this._current, d);
+        this._current = i(0);
+        return t => arcGen(i(t));
+      });
 
     // draw the bars
   }, [data, dimensions]);

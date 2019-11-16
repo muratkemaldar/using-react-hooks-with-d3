@@ -35,7 +35,7 @@ function App() {
         setData([...data, results[0].confidence]);
       });
     }
-  }, 1000);
+  }, 500);
 
   return (
     <React.Fragment>
