@@ -1,5 +1,4 @@
 svg {
-  background: #eee;
   overflow: visible;
   display: block;
   width: 100%;
@@ -13,6 +12,7 @@ svg {
   height: 100vh;
   padding: 0 50px;
   text-align: center;
+  padding-bottom: 300px;
 }
 
 button {

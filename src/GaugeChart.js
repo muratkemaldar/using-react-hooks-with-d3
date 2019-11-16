@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from "react";
 import { select, interpolate, arc, pie } from "d3";
 import useResizeObserver from "./useResizeObserver";
 
-function TachoChart({ data }) {
+function GaugeChart({ data }) {
   const svgRef = useRef();
   const wrapperRef = useRef();
   const dimensions = useResizeObserver(wrapperRef);
@@ -12,26 +12,27 @@ function TachoChart({ data }) {
     const svg = select(svgRef.current);
     if (!dimensions) return;
 
-    const arcGen = arc()
+    const arcGenerator = arc()
       .innerRadius(100)
       .outerRadius(150);
 
-    const pieGen = pie()
+    const pieGenerator = pie()
       .startAngle(-0.5 * Math.PI)
       .endAngle(0.5 * Math.PI)
       .sort(null);
 
-    const arcs = pieGen([data, 1 - data]);
-    const slices = svg.selectAll(".tacho").data(arcs);
+    const slices = pieGenerator(data);
 
-    slices
+    svg
+      .selectAll(".gauge-part")
+      .data(slices)
       .join(
         enter =>
           enter
             .append("path")
-            .attr("class", "tacho")
-            .attr("fill", (d, i) => (i ? "#ddd" : "#ffcc00"))
-            .attr("d", arcGen)
+            .attr("class", "gauge-part")
+            .attr("fill", (d, i) => (i ? "#eee" : "#ffcc00"))
+            .attr("d", arcGenerator)
             .each(function(value) {
               this.currentPieValue = value;
             }),
@@ -42,7 +43,7 @@ function TachoChart({ data }) {
             .attrTween("d", function(value) {
               const interpolator = interpolate(this.currentPieValue, value);
               this.currentPieValue = interpolator(0);
-              return time => arcGen(interpolator(time));
+              return time => arcGenerator(interpolator(time));
             })
       )
       .style(
@@ -63,4 +64,4 @@ function TachoChart({ data }) {
   );
 }
 
-export default TachoChart;
+export default GaugeChart;

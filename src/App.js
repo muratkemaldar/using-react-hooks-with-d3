@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
 import ml5 from "ml5";
-import TachoChart from "./TachoChart";
+import GaugeChart from "./GaugeChart";
 import useInterval from "./useInterval";
 
 let classifier;
 
 function App() {
   const videoRef = useRef();
-  const [tachoData, setTachoData] = useState(0);
-  const [classify, setClassify] = useState(false);
+  const [gaugeData, setGaugeData] = useState([0.5, 0.5]);
+  const [shouldClassify, setShouldClassify] = useState(false);
 
   useEffect(() => {
     classifier = ml5.imageClassifier("./my-model/model.json", () => {
@@ -23,25 +23,31 @@ function App() {
   }, []);
 
   useInterval(() => {
-    if (classifier && classify) {
+    if (classifier && shouldClassify) {
       classifier.classify(videoRef.current, (error, results) => {
         if (error) {
           console.error(error);
           return;
         }
-        setTachoData(results[0].confidence);
+        results.sort((a, b) => b.label.localeCompare(a.label));
+        setGaugeData(results.map(entry => entry.confidence));
       });
     }
   }, 500);
 
   return (
     <React.Fragment>
-      <h1>Hello ML5</h1>
-      <TachoChart data={tachoData} />
-      <button onClick={() => setClassify(!classify)}>
-        {classify ? "Stop classifying" : "Start classifying"}
+      <h1>Is Muri there?</h1>
+      <GaugeChart data={gaugeData} />
+      <button onClick={() => setShouldClassify(!shouldClassify)}>
+        {shouldClassify ? "Stop classifying" : "Start classifying"}
       </button>
-      <video ref={videoRef} width="300" height="150" />
+      <video
+        ref={videoRef}
+        style={{ transform: "scale(-1, 1)" }}
+        width="300"
+        height="150"
+      />
     </React.Fragment>
   );
 }
