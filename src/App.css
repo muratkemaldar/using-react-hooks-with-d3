@@ -12,10 +12,20 @@ svg {
   justify-content: center;
   height: 100vh;
   padding: 0 50px;
+  text-align: center;
 }
 
 button {
   width: 100px;
   border: 1px solid black;
   margin: 0 auto 5px;
+}
+
+video {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: auto;
+  width: 100%;
 }
