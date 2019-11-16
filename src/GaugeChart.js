@@ -13,7 +13,7 @@ function GaugeChart({ data }) {
     if (!dimensions) return;
 
     const arcGenerator = arc()
-      .innerRadius(100)
+      .innerRadius(75)
       .outerRadius(150);
 
     const pieGenerator = pie()
