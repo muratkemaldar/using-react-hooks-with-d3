@@ -37,7 +37,12 @@ function App() {
 
   return (
     <React.Fragment>
-      <h1>Is Muri there?</h1>
+      <h1>
+        Is Muri there? <br />
+        <small>
+          [{gaugeData[0].toFixed(2)}, {gaugeData[1].toFixed(2)}]
+        </small>
+      </h1>
       <GaugeChart data={gaugeData} />
       <button onClick={() => setShouldClassify(!shouldClassify)}>
         {shouldClassify ? "Stop classifying" : "Start classifying"}

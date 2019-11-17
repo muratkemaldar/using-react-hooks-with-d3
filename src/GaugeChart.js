@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { select, interpolate, arc, pie } from "d3";
+import { select, arc, pie, interpolate } from "d3";
 import useResizeObserver from "./useResizeObserver";
 
 function GaugeChart({ data }) {
@@ -21,45 +21,33 @@ function GaugeChart({ data }) {
       .endAngle(0.5 * Math.PI)
       .sort(null);
 
-    const slices = pieGenerator(data);
+    const instructions = pieGenerator(data);
 
     svg
-      .selectAll(".gauge-part")
-      .data(slices)
-      .join(
-        enter =>
-          enter
-            .append("path")
-            .attr("class", "gauge-part")
-            .attr("fill", (d, i) => (i ? "#eee" : "#ffcc00"))
-            .attr("d", arcGenerator)
-            .each(function(value) {
-              this.currentPieValue = value;
-            }),
-        update =>
-          update
-            .transition()
-            .duration(300)
-            .attrTween("d", function(value) {
-              const interpolator = interpolate(this.currentPieValue, value);
-              this.currentPieValue = interpolator(0);
-              return time => arcGenerator(interpolator(time));
-            })
-      )
+      .selectAll(".slice")
+      .data(instructions)
+      .join("path")
+      .attr("class", "slice")
+      .attr("fill", (instruction, index) => (index === 0 ? "#ffcc00" : "#eee"))
       .style(
         "transform",
         `translate(${dimensions.width / 2}px, ${dimensions.height}px)`
-      );
+      )
+      .transition()
+      .attrTween("d", function(nextInstruction) {
+        const interpolator = interpolate(this.lastInstruction, nextInstruction);
+        this.lastInstruction = interpolator(1);
+        return function(t) {
+          return arcGenerator(interpolator(t));
+        };
+      });
 
-    // draw the bars
+    // draw the gauge
   }, [data, dimensions]);
 
   return (
     <div ref={wrapperRef} style={{ marginBottom: "2rem" }}>
-      <svg ref={svgRef}>
-        <g className="x-axis" />
-        <g className="y-axis" />
-      </svg>
+      <svg ref={svgRef}></svg>
     </div>
   );
 }

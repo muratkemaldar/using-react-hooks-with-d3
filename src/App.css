@@ -1,6 +1,7 @@
 svg {
   overflow: visible;
   display: block;
+  /* background: #eee; */
   width: 100%;
 }
 
@@ -10,8 +11,9 @@ svg {
   align-items: stretch;
   justify-content: center;
   height: 100vh;
-  padding: 0 50px;
+  padding: 0 50px 150px;
   text-align: center;
+  box-sizing: border-box;
 }
 
 button {
