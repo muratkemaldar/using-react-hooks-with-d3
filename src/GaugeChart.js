@@ -34,8 +34,14 @@ function GaugeChart({ data }) {
         `translate(${dimensions.width / 2}px, ${dimensions.height}px)`
       )
       .transition()
-      .attrTween("d", function(nextInstruction) {
-        const interpolator = interpolate(this.lastInstruction, nextInstruction);
+      .attrTween("d", function(nextInstruction, index) {
+        // bonus, which wasn't in video 07:
+        // animate chart initially, but setting initial instruction
+        const initialInstruction = pieGenerator([0, 1])[index];
+        const interpolator = interpolate(
+          this.lastInstruction || initialInstruction,
+          nextInstruction
+        );
         this.lastInstruction = interpolator(1);
         return function(t) {
           return arcGenerator(interpolator(t));
