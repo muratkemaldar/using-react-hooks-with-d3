@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import BBTimeline from "./BBTimeline";
 import "./App.css";
 
 function App() {
-  const videoRef = useRef();
   const [bbEpisodes, setBbEpisodes] = useState([]);
   const [bbCharacters, setBbCharacters] = useState([]);
   const [highlight, setHighlight] = useState();
@@ -29,16 +28,6 @@ function App() {
       .catch(console.error);
   }, []);
 
-  // personal video stuff
-  useEffect(() => {
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: false })
-      .then(stream => {
-        videoRef.current.srcObject = stream;
-        videoRef.current.play();
-      });
-  }, []);
-
   return (
     <React.Fragment>
       <h1>Breaking Bad Timeline</h1>
@@ -51,13 +40,6 @@ function App() {
           <option key={character.name}>{character.name}</option>
         ))}
       </select>
-
-      <video
-        ref={videoRef}
-        style={{ transform: "scale(-1, 1)" }}
-        width="300"
-        height="150"
-      />
     </React.Fragment>
   );
 }
