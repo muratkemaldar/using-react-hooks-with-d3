@@ -1,13 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import {
-  select,
-  min,
-  max,
-  scaleTime,
-  axisBottom,
-  timeYears,
-  timeFormat
-} from "d3";
+import { select, min, max, scaleTime, scaleLinear, axisBottom } from "d3";
 import useResizeObserver from "./useResizeObserver";
 
 const getDate = dateString => {
@@ -28,21 +20,13 @@ function BBTimeline({ data, highlight }) {
     const minDate = min(data, episode => getDate(episode.air_date));
     const maxDate = max(data, episode => getDate(episode.air_date));
 
-    const timeScale = scaleTime()
+    const xScale = scaleTime()
       .domain([minDate, maxDate])
       .range([0, dimensions.width]);
 
-    const yScale = scaleTime()
+    const yScale = scaleLinear()
       .domain([max(data, episode => episode.characters.length), 0])
       .range([0, dimensions.height]);
-
-    const xAxis = axisBottom(timeScale)
-      .ticks(timeYears(minDate, maxDate).length)
-      .tickFormat(timeFormat("%Y"));
-    svg
-      .select(".x-axis")
-      .style("transform", `translateY(${dimensions.height}px)`)
-      .call(xAxis);
 
     svg
       .selectAll(".episode")
@@ -52,10 +36,16 @@ function BBTimeline({ data, highlight }) {
       .attr("stroke", episode =>
         episode.characters.includes(highlight) ? "blue" : "black"
       )
-      .attr("x1", episode => timeScale(getDate(episode.air_date)))
-      .attr("x2", episode => timeScale(getDate(episode.air_date)))
+      .attr("x1", episode => xScale(getDate(episode.air_date)))
       .attr("y1", dimensions.height)
+      .attr("x2", episode => xScale(getDate(episode.air_date)))
       .attr("y2", episode => yScale(episode.characters.length));
+
+    const xAxis = axisBottom(xScale);
+    svg
+      .select(".x-axis")
+      .style("transform", `translateY(${dimensions.height}px)`)
+      .call(xAxis);
 
     // draw the gauge
   }, [data, dimensions, highlight]);
