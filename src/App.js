@@ -1,58 +1,44 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
+import BBTimeline from "./BBTimeline";
 import "./App.css";
-import ml5 from "ml5";
-import GaugeChart from "./GaugeChart";
-import useInterval from "./useInterval";
-
-let classifier;
 
 function App() {
-  const videoRef = useRef();
-  const [gaugeData, setGaugeData] = useState([0.5, 0.5]);
-  const [shouldClassify, setShouldClassify] = useState(false);
+  const [bbEpisodes, setBbEpisodes] = useState([]);
+  const [bbCharacters, setBbCharacters] = useState([]);
+  const [highlight, setHighlight] = useState();
 
   useEffect(() => {
-    classifier = ml5.imageClassifier("./my-model/model.json", () => {
-      navigator.mediaDevices
-        .getUserMedia({ video: true, audio: false })
-        .then(stream => {
-          videoRef.current.srcObject = stream;
-          videoRef.current.play();
-        });
-    });
+    fetch("https://www.breakingbadapi.com/api/characters?category=Breaking+Bad")
+      .then(response => response.ok && response.json())
+      .then(characters => {
+        setBbCharacters(
+          characters.sort((a, b) => a.name.localeCompare(b.name))
+        );
+      })
+      .catch(console.error);
   }, []);
 
-  useInterval(() => {
-    if (classifier && shouldClassify) {
-      classifier.classify(videoRef.current, (error, results) => {
-        if (error) {
-          console.error(error);
-          return;
-        }
-        results.sort((a, b) => b.label.localeCompare(a.label));
-        setGaugeData(results.map(entry => entry.confidence));
-      });
-    }
-  }, 500);
+  useEffect(() => {
+    fetch("https://www.breakingbadapi.com/api/episodes?series=Breaking+Bad")
+      .then(response => response.ok && response.json())
+      .then(episodes => {
+        setBbEpisodes(episodes);
+      })
+      .catch(console.error);
+  }, []);
 
   return (
     <React.Fragment>
-      <h1>
-        Is Muri there? <br />
-        <small>
-          [{gaugeData[0].toFixed(2)}, {gaugeData[1].toFixed(2)}]
-        </small>
-      </h1>
-      <GaugeChart data={gaugeData} />
-      <button onClick={() => setShouldClassify(!shouldClassify)}>
-        {shouldClassify ? "Stop classifying" : "Start classifying"}
-      </button>
-      <video
-        ref={videoRef}
-        style={{ transform: "scale(-1, 1)" }}
-        width="300"
-        height="150"
-      />
+      <h1>Breaking Bad Timeline</h1>
+
+      <BBTimeline highlight={highlight} data={bbEpisodes} />
+      <h2>Select your character</h2>
+      <select value={highlight} onChange={e => setHighlight(e.target.value)}>
+        <option>Select character</option>
+        {bbCharacters.map(character => (
+          <option key={character.name}>{character.name}</option>
+        ))}
+      </select>
     </React.Fragment>
   );
 }
