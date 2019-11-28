@@ -47,8 +47,6 @@ function GaugeChart({ data }) {
           return arcGenerator(interpolator(t));
         };
       });
-
-    // draw the gauge
   }, [data, dimensions]);
 
   return (

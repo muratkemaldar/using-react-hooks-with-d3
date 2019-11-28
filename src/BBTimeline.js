@@ -46,8 +46,6 @@ function BBTimeline({ data, highlight }) {
       .select(".x-axis")
       .style("transform", `translateY(${dimensions.height}px)`)
       .call(xAxis);
-
-    // draw the gauge
   }, [data, dimensions, highlight]);
 
   return (
