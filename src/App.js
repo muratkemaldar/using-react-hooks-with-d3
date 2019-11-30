@@ -46,7 +46,6 @@ function App() {
   useInterval(() => {
     if (start) {
       const randomIndex = getRandomIndex(data);
-      setIteration(iteration + 1);
       setData(
         data.map((entry, index) =>
           index === randomIndex
@@ -57,6 +56,7 @@ function App() {
             : entry
         )
       );
+      setIteration(iteration + 1);
     }
   }, 500);
 
