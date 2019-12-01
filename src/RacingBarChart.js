@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from "react";
 import { select, scaleBand, scaleLinear, max } from "d3";
 import useResizeObserver from "./useResizeObserver";
 
-function RacingBarChart({ data, bars = 8 }) {
+function RacingBarChart({ data }) {
   const svgRef = useRef();
   const wrapperRef = useRef();
   const dimensions = useResizeObserver(wrapperRef);
@@ -12,52 +12,51 @@ function RacingBarChart({ data, bars = 8 }) {
     const svg = select(svgRef.current);
     if (!dimensions) return;
 
+    // sorting the data
     data.sort((a, b) => b.value - a.value);
 
-    const xScale = scaleLinear()
-      .domain([0, max(data, entry => entry.value)])
-      .range([0, dimensions.width]);
-
     const yScale = scaleBand()
-      .domain(data.map((d, i) => i))
-      .range([0, dimensions.height])
-      .paddingInner(0.1);
+      .paddingInner(0.1)
+      .domain(data.map((value, index) => index)) // [0,1,2,3,4,5]
+      .range([0, dimensions.height]); // [0, 200]
 
+    const xScale = scaleLinear()
+      .domain([0, max(data, entry => entry.value)]) // [0, 65 (example)]
+      .range([0, dimensions.width]); // [0, 400 (example)]
+
+    // draw the bars
     svg
       .selectAll(".bar")
-      .data(data, entry => entry.name)
+      .data(data, (entry, index) => entry.name)
       .join(enter =>
         enter.append("rect").attr("y", (entry, index) => yScale(index))
       )
-      .attr("class", "bar")
       .attr("fill", entry => entry.color)
+      .attr("class", "bar")
+      .attr("x", 0)
       .attr("height", yScale.bandwidth())
       .transition()
-      .duration(600)
       .attr("width", entry => xScale(entry.value))
-      .attr("x", 0)
       .attr("y", (entry, index) => yScale(index));
 
+    // draw the labels
     svg
       .selectAll(".label")
-      .data(data, entry => entry.name)
+      .data(data, (entry, index) => entry.name)
       .join(enter =>
         enter
           .append("text")
-          .attr("x", 10)
           .attr(
             "y",
-            (entry, index) => 5 + yScale(index) + yScale.bandwidth() / 2
+            (entry, index) => yScale(index) + yScale.bandwidth() / 2 + 5
           )
       )
-      .attr("class", "label")
-      .attr("font-size", 14)
       .text(entry => `🐎 ... ${entry.name} (${entry.value} meters)`)
+      .attr("class", "label")
+      .attr("x", 10)
       .transition()
-      .duration(600)
-
-      .attr("y", (entry, index) => 5 + yScale(index) + yScale.bandwidth() / 2);
-  }, [data, dimensions, bars]);
+      .attr("y", (entry, index) => yScale(index) + yScale.bandwidth() / 2 + 5);
+  }, [data, dimensions]);
 
   return (
     <div ref={wrapperRef} style={{ marginBottom: "2rem" }}>
