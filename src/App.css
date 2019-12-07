@@ -1,9 +1,7 @@
 svg {
   overflow: visible;
   display: block;
-  /* background: #eee; */
   width: 100%;
-  height: 200px;
 }
 
 #root {

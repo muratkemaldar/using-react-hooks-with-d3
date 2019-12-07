@@ -2,40 +2,39 @@ import React, { useState } from "react";
 import TreeChart from "./TreeChart";
 import "./App.css";
 
+const initialData = {
+  name: "😐",
+  children: [
+    {
+      name: "🙂",
+      children: [
+        {
+          name: "😀"
+        },
+        {
+          name: "😁"
+        },
+        {
+          name: "🤣"
+        }
+      ]
+    },
+    {
+      name: "😔"
+    }
+  ]
+};
+
 function App() {
-  const [start, setStart] = useState(false);
-  const [data, setData] = useState({
-    name: "A1",
-    children: [
-      {
-        name: "B1",
-        children: [
-          {
-            name: "C1",
-            value: 100
-          },
-          {
-            name: "C2",
-            value: 300
-          },
-          {
-            name: "C3",
-            value: 200
-          }
-        ]
-      },
-      {
-        name: "B2",
-        value: 200
-      }
-    ]
-  });
+  const [data, setData] = useState(initialData);
 
   return (
     <React.Fragment>
       <h1>Tree Chart</h1>
       <TreeChart data={data} />
-      <button onClick={() => setData(data.children[0])}>Update data</button>
+      <button onClick={() => setData(initialData.children[0])}>
+        Update data
+      </button>
     </React.Fragment>
   );
 }
