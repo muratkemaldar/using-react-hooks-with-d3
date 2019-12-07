@@ -26,7 +26,7 @@ function TreeChart({ data }) {
     const svg = select(svgRef.current);
     if (!dimensions) return;
 
-    // transform hierachical data
+    // transform hierarchical data
     const root = hierarchy(data);
     const treeLayout = tree().size([dimensions.height, dimensions.width]);
 
@@ -34,7 +34,7 @@ function TreeChart({ data }) {
       .x(link => link.y)
       .y(link => link.x);
 
-    // enrich hiearchy data with coordinates
+    // enrich hierarchical data with coordinates
     treeLayout(root);
 
     console.warn("descendants", root.descendants());
