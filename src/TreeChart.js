@@ -21,21 +21,21 @@ function TreeChart({ data }) {
     const svg = select(svgRef.current);
     if (!dimensions) return;
 
+    // transform hierachical data
     const root = hierarchy(data);
     const treeLayout = tree().size([dimensions.height, dimensions.width]);
 
-    const linkGen = linkHorizontal()
+    const linkGenerator = linkHorizontal()
       .x(link => link.y)
       .y(link => link.x);
 
-    // extend data with coordinates
+    // enrich hiearchy data with coordinates
     treeLayout(root);
 
-    // test
     console.warn("descendants", root.descendants());
     console.warn("links", root.links());
 
-    // Nodes
+    // nodes
     svg
       .selectAll(".node")
       .data(root.descendants())
@@ -45,32 +45,16 @@ function TreeChart({ data }) {
       .attr("cy", node => node.x)
       .attr("r", 4)
       .transition()
-      .duration(300)
+      .duration(500)
       .delay(node => node.depth * 300)
       .attr("opacity", 1);
 
-    // Labels
-    svg
-      .selectAll(".label")
-      .data(root.descendants())
-      .join(enter => enter.append("text").attr("opacity", 0))
-      .classed("label", true)
-      .attr("x", node => node.y)
-      .attr("y", node => node.x - 12)
-      .attr("text-anchor", "middle")
-      .attr("font-size", 24)
-      .text(node => node.data.name)
-      .transition()
-      .duration(300)
-      .delay(node => node.depth * 300)
-      .attr("opacity", 1);
-
-    // Links
+    // links
     const enteringAndUpdatingLinks = svg
       .selectAll(".link")
       .data(root.links())
       .join("path")
-      .attr("d", linkGen)
+      .attr("d", linkGenerator)
       .attr("stroke-dasharray", function() {
         const length = this.getTotalLength();
         return `${length} ${length}`;
@@ -86,10 +70,26 @@ function TreeChart({ data }) {
           return this.getTotalLength();
         })
         .transition()
-        .duration(300)
-        .delay(link => link.source.depth * 300)
+        .duration(500)
+        .delay(link => link.source.depth * 500)
         .attr("stroke-dashoffset", 0);
     }
+
+    // labels
+    svg
+      .selectAll(".label")
+      .data(root.descendants())
+      .join(enter => enter.append("text").attr("opacity", 0))
+      .classed("label", true)
+      .attr("x", node => node.y)
+      .attr("y", node => node.x - 12)
+      .attr("text-anchor", "middle")
+      .attr("font-size", 24)
+      .text(node => node.data.name)
+      .transition()
+      .duration(500)
+      .delay(node => node.depth * 300)
+      .attr("opacity", 1);
   }, [data, dimensions, previouslyRenderedData]);
 
   return (

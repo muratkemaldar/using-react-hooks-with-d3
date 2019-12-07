@@ -30,7 +30,7 @@ function App() {
 
   return (
     <React.Fragment>
-      <h1>Tree Chart</h1>
+      <h1>Animated Tree Chart</h1>
       <TreeChart data={data} />
       <button onClick={() => setData(initialData.children[0])}>
         Update data
