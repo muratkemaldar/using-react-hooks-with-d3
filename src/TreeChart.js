@@ -14,6 +14,11 @@ function TreeChart({ data }) {
   const svgRef = useRef();
   const wrapperRef = useRef();
   const dimensions = useResizeObserver(wrapperRef);
+
+  // only save the old data if we rendered it (with dimensions)
+  // otherwise the data in useEffect is always equal.
+  // reason: we skip the initial render (with no dimensions, but data).
+  // (see line 26).
   const previouslyRenderedData = usePrevious(dimensions ? data : null);
 
   // will be called initially and on every data change
