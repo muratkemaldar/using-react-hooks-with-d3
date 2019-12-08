@@ -11,7 +11,7 @@ This session is about creating an animated tree layout.
 
 `git clone git@github.com:muratkemaldar/using-react-hooks-with-d3.git`
 
-`git checkout 09-racing-bar-chart`
+`git checkout 10-hierarchy`
 
 `npm install`
 

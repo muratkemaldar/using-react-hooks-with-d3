@@ -18,7 +18,7 @@ function TreeChart({ data }) {
   // only save the old data if we rendered it (with dimensions)
   // otherwise the data in useEffect is always equal.
   // reason: we skip the initial render (with no dimensions, but data).
-  // (see line 26).
+  // (see line 27).
   const previouslyRenderedData = usePrevious(dimensions ? data : null);
 
   // will be called initially and on every data change
@@ -45,7 +45,7 @@ function TreeChart({ data }) {
       .selectAll(".node")
       .data(root.descendants())
       .join(enter => enter.append("circle").attr("opacity", 0))
-      .classed("node", true)
+      .attr("class", "node")
       .attr("cx", node => node.y)
       .attr("cy", node => node.x)
       .attr("r", 4)
@@ -59,6 +59,7 @@ function TreeChart({ data }) {
       .selectAll(".link")
       .data(root.links())
       .join("path")
+      .attr("class", "link")
       .attr("d", linkGenerator)
       .attr("stroke-dasharray", function() {
         const length = this.getTotalLength();
@@ -66,7 +67,6 @@ function TreeChart({ data }) {
       })
       .attr("stroke", "black")
       .attr("fill", "none")
-      .classed("link", true)
       .attr("opacity", 1);
 
     if (data !== previouslyRenderedData) {
@@ -85,7 +85,7 @@ function TreeChart({ data }) {
       .selectAll(".label")
       .data(root.descendants())
       .join(enter => enter.append("text").attr("opacity", 0))
-      .classed("label", true)
+      .attr("class", "label")
       .attr("x", node => node.y)
       .attr("y", node => node.x - 12)
       .attr("text-anchor", "middle")
