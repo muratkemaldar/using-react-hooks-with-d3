@@ -35,13 +35,13 @@ function ForceTreeChart({ data }) {
     ]);
 
     const root = hierarchy(data);
-    const rootNodes = root.descendants();
-    const rootLinks = root.links();
+    const nodeData = root.descendants();
+    const linkData = root.links();
 
     // links
     const links = svg
       .selectAll(".link")
-      .data(rootLinks)
+      .data(linkData)
       .join("line")
       .attr("class", "link")
       .attr("stroke", "black")
@@ -50,7 +50,7 @@ function ForceTreeChart({ data }) {
     // nodes
     const nodes = svg
       .selectAll(".node")
-      .data(rootNodes)
+      .data(nodeData)
       .join("circle")
       .attr("class", "node")
       .attr("r", 4);
@@ -58,7 +58,7 @@ function ForceTreeChart({ data }) {
     // labels
     const labels = svg
       .selectAll(".label")
-      .data(rootNodes)
+      .data(nodeData)
       .join("text")
       .attr("class", "label")
       .attr("text-anchor", "middle")
@@ -66,7 +66,7 @@ function ForceTreeChart({ data }) {
       .text(node => node.data.name);
 
     // simulation
-    const simulation = forceSimulation(rootNodes)
+    const simulation = forceSimulation(nodeData)
       .force("charge", forceManyBody().strength(-50))
       .force("collide", forceCollide(15))
       .on("tick", () => {
