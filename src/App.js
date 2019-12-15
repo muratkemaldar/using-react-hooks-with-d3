@@ -32,7 +32,7 @@ function App() {
     <React.Fragment>
       <h2>🪐 D3 Force Layout</h2>
       <ForceTreeChart data={data} />
-      <h2>🌲 Animated Tree Chart</h2>
+      <h2>Animated Tree Chart</h2>
       <TreeChart data={data} />
       <Video />
     </React.Fragment>

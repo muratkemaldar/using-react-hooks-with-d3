@@ -48,20 +48,6 @@ function TreeChart({ data }) {
     console.warn("descendants", root.descendants());
     console.warn("links", root.links());
 
-    // nodes
-    svg
-      .selectAll(".node")
-      .data(root.descendants())
-      .join(enter => enter.append("circle").attr("opacity", 0))
-      .attr("class", "node")
-      .attr("cx", node => node.y)
-      .attr("cy", node => node.x)
-      .attr("r", 4)
-      .transition()
-      .duration(500)
-      .delay(node => node.depth * 300)
-      .attr("opacity", 1);
-
     // links
     const enteringAndUpdatingLinks = svg
       .selectAll(".link")
@@ -87,6 +73,20 @@ function TreeChart({ data }) {
         .delay(link => link.source.depth * 500)
         .attr("stroke-dashoffset", 0);
     }
+
+    // nodes
+    svg
+      .selectAll(".node")
+      .data(root.descendants())
+      .join(enter => enter.append("circle").attr("opacity", 0))
+      .attr("class", "node")
+      .attr("cx", node => node.y)
+      .attr("cy", node => node.x)
+      .attr("r", 4)
+      .transition()
+      .duration(500)
+      .delay(node => node.depth * 300)
+      .attr("opacity", 1);
 
     // labels
     svg
