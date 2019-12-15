@@ -1,5 +1,9 @@
 import { useEffect, useRef } from "react";
 
+/**
+ * Hook, that makes setInterval work with functional components.
+ */
+
 function useInterval(callback, delay) {
   const savedCallback = useRef();
 

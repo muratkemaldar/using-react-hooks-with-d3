@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import TreeChart from "./TreeChart";
+import ForceTreeChart from "./ForceTreeChart";
+import Video from "./Video";
 import "./App.css";
 
-const initialData = {
+const data = {
   name: "😐",
   children: [
     {
@@ -26,15 +28,13 @@ const initialData = {
 };
 
 function App() {
-  const [data, setData] = useState(initialData);
-
   return (
     <React.Fragment>
-      <h1>Animated Tree Chart</h1>
+      <h2>🪐 D3 Force Layout</h2>
+      <ForceTreeChart data={data} />
+      <h2>🌲 Animated Tree Chart</h2>
       <TreeChart data={data} />
-      <button onClick={() => setData(initialData.children[0])}>
-        Update data
-      </button>
+      <Video />
     </React.Fragment>
   );
 }

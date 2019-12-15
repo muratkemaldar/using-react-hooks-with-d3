@@ -2,6 +2,10 @@ import React, { useRef, useEffect } from "react";
 import { select, hierarchy, tree, linkHorizontal } from "d3";
 import useResizeObserver from "./useResizeObserver";
 
+/**
+ * Hook, that returns the last used value.
+ */
+
 function usePrevious(value) {
   const ref = useRef();
   useEffect(() => {
@@ -9,6 +13,10 @@ function usePrevious(value) {
   });
   return ref.current;
 }
+
+/**
+ * Component that renders a tree.
+ */
 
 function TreeChart({ data }) {
   const svgRef = useRef();

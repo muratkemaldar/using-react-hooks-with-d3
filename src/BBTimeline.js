@@ -7,6 +7,10 @@ const getDate = dateString => {
   return new Date(date[2], date[0] - 1, date[1]);
 };
 
+/**
+ * Component that renders a (BreakingBad) timeline.
+ */
+
 function BBTimeline({ data, highlight }) {
   const svgRef = useRef();
   const wrapperRef = useRef();

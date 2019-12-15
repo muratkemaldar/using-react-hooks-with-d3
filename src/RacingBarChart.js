@@ -2,6 +2,10 @@ import React, { useRef, useEffect } from "react";
 import { select, scaleBand, scaleLinear, max } from "d3";
 import useResizeObserver from "./useResizeObserver";
 
+/**
+ * Component, that renders a Racing Bar Chart.
+ */
+
 function RacingBarChart({ data }) {
   const svgRef = useRef();
   const wrapperRef = useRef();

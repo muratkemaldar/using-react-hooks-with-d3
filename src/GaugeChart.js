@@ -2,6 +2,10 @@ import React, { useRef, useEffect } from "react";
 import { select, arc, pie, interpolate } from "d3";
 import useResizeObserver from "./useResizeObserver";
 
+/**
+ * Component that renders a half-radial gauge.
+ */
+
 function GaugeChart({ data }) {
   const svgRef = useRef();
   const wrapperRef = useRef();
