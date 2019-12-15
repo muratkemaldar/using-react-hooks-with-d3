@@ -1,7 +1,7 @@
 import React from "react";
 import TreeChart from "./TreeChart";
 import ForceTreeChart from "./ForceTreeChart";
-import Video from "./Video";
+// import Video from "./Video";
 import "./App.css";
 
 const data = {
@@ -34,7 +34,7 @@ function App() {
       <ForceTreeChart data={data} />
       <h2>Animated Tree Chart</h2>
       <TreeChart data={data} />
-      <Video />
+      {/* <Video /> */}
     </React.Fragment>
   );
 }

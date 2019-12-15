@@ -4,11 +4,11 @@ import {
   hierarchy,
   forceSimulation,
   forceManyBody,
+  mouse,
   forceX,
   forceY,
-  forceRadial,
-  mouse,
-  forceCollide
+  forceCollide,
+  forceRadial
 } from "d3";
 import useResizeObserver from "./useResizeObserver";
 
@@ -26,7 +26,7 @@ function ForceTreeChart({ data }) {
     if (!dimensions) return;
     const svg = select(svgRef.current);
 
-    // centers the simulation
+    // centering workaround
     svg.attr("viewBox", [
       -dimensions.width / 2,
       -dimensions.height / 2,
@@ -34,44 +34,18 @@ function ForceTreeChart({ data }) {
       dimensions.height
     ]);
 
+    // d3 util to work with hierarchical data
     const root = hierarchy(data);
     const nodeData = root.descendants();
     const linkData = root.links();
 
-    // links
-    const links = svg
-      .selectAll(".link")
-      .data(linkData)
-      .join("line")
-      .attr("class", "link")
-      .attr("stroke", "black")
-      .attr("fill", "none");
-
-    // nodes
-    const nodes = svg
-      .selectAll(".node")
-      .data(nodeData)
-      .join("circle")
-      .attr("class", "node")
-      .attr("r", 4);
-
-    // labels
-    const labels = svg
-      .selectAll(".label")
-      .data(nodeData)
-      .join("text")
-      .attr("class", "label")
-      .attr("text-anchor", "middle")
-      .attr("font-size", 20)
-      .text(node => node.data.name);
-
-    // simulation
     const simulation = forceSimulation(nodeData)
-      .force("charge", forceManyBody().strength(-50))
-      .force("collide", forceCollide(15))
+      .force("charge", forceManyBody().strength(-30))
+      .force("collide", forceCollide(30))
       .on("tick", () => {
-        console.warn("current alpha:", simulation.alpha());
+        console.log("current force", simulation.alpha());
 
+        // current alpha text
         svg
           .selectAll(".alpha")
           .data([data])
@@ -79,22 +53,63 @@ function ForceTreeChart({ data }) {
           .attr("class", "alpha")
           .text(simulation.alpha().toFixed(2))
           .attr("x", -dimensions.width / 2 + 10)
-          .attr("y", -dimensions.height / 2 + 30);
+          .attr("y", -dimensions.height / 2 + 25);
 
-        nodes.attr("cx", d => d.x).attr("cy", d => d.y);
+        // links
+        svg
+          .selectAll(".link")
+          .data(linkData)
+          .join("line")
+          .attr("class", "link")
+          .attr("stroke", "black")
+          .attr("fill", "none")
+          .attr("x1", link => link.source.x)
+          .attr("y1", link => link.source.y)
+          .attr("x2", link => link.target.x)
+          .attr("y2", link => link.target.y);
 
-        links
-          .attr("x1", d => d.source.x)
-          .attr("y1", d => d.source.y)
-          .attr("x2", d => d.target.x)
-          .attr("y2", d => d.target.y);
+        // nodes
+        svg
+          .selectAll(".node")
+          .data(nodeData)
+          .join("circle")
+          .attr("class", "node")
+          .attr("r", 4)
+          .attr("cx", node => node.x)
+          .attr("cy", node => node.y);
 
-        labels.attr("x", d => d.x).attr("y", d => d.y - 12);
+        // labels
+        svg
+          .selectAll(".label")
+          .data(nodeData)
+          .join("text")
+          .attr("class", "label")
+          .attr("text-anchor", "middle")
+          .attr("font-size", 20)
+          .text(node => node.data.name)
+          .attr("x", node => node.x)
+          .attr("y", node => node.y);
       });
 
-    svg.on("click", () => {
-      simulation.alpha(0.5).restart();
+    svg.on("mousemove", () => {
       const [x, y] = mouse(svgRef.current);
+      simulation
+        .force(
+          "x",
+          forceX(x).strength(node => 0.2 + node.depth * 0.15)
+        )
+        .force(
+          "y",
+          forceY(y).strength(node => 0.2 + node.depth * 0.15)
+        );
+    });
+
+    svg.on("click", () => {
+      const [x, y] = mouse(svgRef.current);
+      simulation
+        .alpha(0.5)
+        .restart()
+        .force("orbit", forceRadial(100, x, y).strength(0.8));
 
       // render a circle to show radial force
       svg
@@ -107,22 +122,6 @@ function ForceTreeChart({ data }) {
         .attr("r", 100)
         .attr("cx", x)
         .attr("cy", y);
-
-      // update radial force
-      simulation.force("radial", forceRadial(100, x, y).strength(0.7));
-    });
-
-    svg.on("mousemove", () => {
-      const [x, y] = mouse(svgRef.current);
-      simulation
-        .force(
-          "x",
-          forceX(x).strength(node => 0.2 + node.depth * 0.1)
-        )
-        .force(
-          "y",
-          forceY(y).strength(node => 0.2 + node.depth * 0.1)
-        );
     });
   }, [data, dimensions]);
 
