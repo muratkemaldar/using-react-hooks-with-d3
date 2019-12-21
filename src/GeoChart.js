@@ -42,12 +42,12 @@ function GeoChart({ data, property }) {
       .data(data.features)
       .join("path")
       .attr("class", "state")
-      .attr("fill", feature => colorScale(feature.properties[property]))
       .on("click", feature =>
         setHighlightedFeature(highlightedFeature === feature ? null : feature)
       )
       .transition()
       .duration(300)
+      .attr("fill", feature => colorScale(feature.properties[property]))
       .attr("d", pathGenerator);
 
     // render text
