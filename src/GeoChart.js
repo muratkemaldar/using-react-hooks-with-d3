@@ -59,7 +59,7 @@ function GeoChart({ data, property }) {
       .text(
         feature =>
           feature &&
-          feature.properties.admin +
+          feature.properties.name +
             ": " +
             feature.properties[property].toLocaleString()
       )
