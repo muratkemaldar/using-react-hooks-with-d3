@@ -13,7 +13,7 @@ const Video = () => {
         videoRef.current.srcObject = stream;
         videoRef.current.play();
       });
-  });
+  }, []);
   return (
     <video
       ref={videoRef}
