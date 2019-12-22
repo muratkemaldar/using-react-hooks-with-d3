@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useLayoutEffect, useState } from "react";
 import { select, geoPath, geoMercator, min, max, scaleLinear } from "d3";
 import useResizeObserver from "./useResizeObserver";
 
@@ -12,24 +12,27 @@ function GeoChart({ data, property }) {
   const dimensions = useResizeObserver(wrapperRef);
   const [highlightedFeature, setHighlightedFeature] = useState(null);
 
-  const minProp = min(data.features, country => country.properties[property]);
-  const maxProp = max(data.features, country => country.properties[property]);
-
-  const colorScale = scaleLinear()
-    .domain([minProp, maxProp])
-    .range(["#ccc", "red"]);
-
   // will be called initially and on every data change
-  useEffect(() => {
+  useLayoutEffect(() => {
     const svg = select(svgRef.current);
-    if (!dimensions) return;
+
+    // new and updated responsiveness!
+    // we fallback to getBoundingClientRect if no dimensions yet!
+    const { width, height } =
+      dimensions || wrapperRef.current.getBoundingClientRect();
+
+    // min / max
+    const minProp = min(data.features, country => country.properties[property]);
+    const maxProp = max(data.features, country => country.properties[property]);
+
+    // color scale
+    const colorScale = scaleLinear()
+      .domain([minProp, maxProp])
+      .range(["#ccc", "red"]);
 
     // projects geo-coordinates on a 2D plane
     const projection = geoMercator()
-      .fitSize(
-        [dimensions.width, dimensions.height],
-        highlightedFeature || data
-      )
+      .fitSize([width, height], highlightedFeature || data)
       .precision(100);
 
     // takes geojson data,
@@ -65,7 +68,7 @@ function GeoChart({ data, property }) {
       )
       .attr("x", 10)
       .attr("y", 25);
-  }, [colorScale, data, dimensions, property, highlightedFeature]);
+  }, [data, dimensions, property, highlightedFeature]);
 
   return (
     <div ref={wrapperRef} style={{ marginBottom: "2rem" }}>
