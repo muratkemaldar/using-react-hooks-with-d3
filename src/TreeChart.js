@@ -22,8 +22,9 @@ function TreeChart({ data }) {
   useEffect(() => {
     const svg = select(svgRef.current);
 
-    // get dimensions for resizeobserver,
-    // but fall back to getBoundingClientRect on initial render / if not available.
+    // use dimensions from useResizeObserver,
+    // but use getBoundingClientRect on initial render
+    // (dimensions are null for the first render)
     const { width, height } =
       dimensions || wrapperRef.current.getBoundingClientRect();
 
