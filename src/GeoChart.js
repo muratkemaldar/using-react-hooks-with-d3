@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { select, geoPath, geoOrthographic, min, max, scaleLinear } from "d3";
+import { select, geoPath, geoMercator, min, max, scaleLinear } from "d3";
 import useResizeObserver from "./useResizeObserver";
 
 /**
@@ -28,7 +28,7 @@ function GeoChart({ data, property }) {
       dimensions || wrapperRef.current.getBoundingClientRect();
 
     // projects geo-coordinates on a 2D plane
-    const projection = geoOrthographic()
+    const projection = geoMercator()
       .fitSize([width, height], selectedCountry || data)
       .precision(100);
 
