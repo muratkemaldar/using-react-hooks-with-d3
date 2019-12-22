@@ -4,7 +4,7 @@ svg {
   height: 300px;
 }
 
-svg .state:hover {
+svg .country:hover {
   stroke: black;
   stroke-width: 1px;
   cursor: pointer;

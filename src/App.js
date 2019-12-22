@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Video from "./Video";
+// import Video from "./Video";
 import GeoChart from "./GeoChart";
 import data from "./GeoChart.world.geo.json";
 import "./App.css";
@@ -19,7 +19,7 @@ function App() {
         <option value="name_len">Name length</option>
         <option value="gdp_md_est">GDP</option>
       </select>
-      <Video />
+      {/* <Video /> */}
     </React.Fragment>
   );
 }

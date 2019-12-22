@@ -1,5 +1,5 @@
-import React, { useRef, useLayoutEffect, useState } from "react";
-import { select, geoPath, geoMercator, min, max, scaleLinear } from "d3";
+import React, { useRef, useEffect, useState } from "react";
+import { select, geoPath, geoOrthographic, min, max, scaleLinear } from "d3";
 import useResizeObserver from "./useResizeObserver";
 
 /**
@@ -10,53 +10,49 @@ function GeoChart({ data, property }) {
   const svgRef = useRef();
   const wrapperRef = useRef();
   const dimensions = useResizeObserver(wrapperRef);
-  const [highlightedFeature, setHighlightedFeature] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
   // will be called initially and on every data change
-  useLayoutEffect(() => {
+  useEffect(() => {
     const svg = select(svgRef.current);
 
-    // new and updated responsiveness!
-    // we fallback to getBoundingClientRect if no dimensions yet!
-    const { width, height } =
-      dimensions || wrapperRef.current.getBoundingClientRect();
-
-    // min / max
-    const minProp = min(data.features, country => country.properties[property]);
-    const maxProp = max(data.features, country => country.properties[property]);
-
-    // color scale
+    const minProp = min(data.features, feature => feature.properties[property]);
+    const maxProp = max(data.features, feature => feature.properties[property]);
     const colorScale = scaleLinear()
       .domain([minProp, maxProp])
       .range(["#ccc", "red"]);
 
+    // use resized dimensions
+    // but fall back to getBoundingClientRect, if no dimensions yet.
+    const { width, height } =
+      dimensions || wrapperRef.current.getBoundingClientRect();
+
     // projects geo-coordinates on a 2D plane
-    const projection = geoMercator()
-      .fitSize([width, height], highlightedFeature || data)
+    const projection = geoOrthographic()
+      .fitSize([width, height], selectedCountry || data)
       .precision(100);
 
     // takes geojson data,
     // transforms that into the d attribute of a path element
     const pathGenerator = geoPath().projection(projection);
 
-    // render states
+    // render each country
     svg
-      .selectAll(".state")
+      .selectAll(".country")
       .data(data.features)
       .join("path")
-      .attr("class", "state")
-      .on("click", feature =>
-        setHighlightedFeature(highlightedFeature === feature ? null : feature)
-      )
+      .on("click", feature => {
+        setSelectedCountry(selectedCountry === feature ? null : feature);
+      })
+      .attr("class", "country")
       .transition()
-      .duration(300)
       .attr("fill", feature => colorScale(feature.properties[property]))
-      .attr("d", pathGenerator);
+      .attr("d", feature => pathGenerator(feature));
 
     // render text
     svg
       .selectAll(".label")
-      .data([highlightedFeature])
+      .data([selectedCountry])
       .join("text")
       .attr("class", "label")
       .text(
@@ -68,7 +64,7 @@ function GeoChart({ data, property }) {
       )
       .attr("x", 10)
       .attr("y", 25);
-  }, [data, dimensions, property, highlightedFeature]);
+  }, [data, dimensions, property, selectedCountry]);
 
   return (
     <div ref={wrapperRef} style={{ marginBottom: "2rem" }}>
