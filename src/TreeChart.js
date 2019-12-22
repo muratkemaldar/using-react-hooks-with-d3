@@ -15,20 +15,21 @@ function TreeChart({ data }) {
   const wrapperRef = useRef();
   const dimensions = useResizeObserver(wrapperRef);
 
-  // only save the old data if we rendered it (with dimensions)
-  // otherwise the data in useEffect is always equal.
-  // reason: we skip the initial render (with no dimensions, but data).
-  // (see line 27).
-  const previouslyRenderedData = usePrevious(dimensions ? data : null);
+  // we save data to see if it changed
+  const previouslyRenderedData = usePrevious(data);
 
   // will be called initially and on every data change
   useEffect(() => {
     const svg = select(svgRef.current);
-    if (!dimensions) return;
+
+    // get dimensions for resizeobserver,
+    // but fall back to getBoundingClientRect on initial render / if not available.
+    const { width, height } =
+      dimensions || wrapperRef.current.getBoundingClientRect();
 
     // transform hierarchical data
     const root = hierarchy(data);
-    const treeLayout = tree().size([dimensions.height, dimensions.width]);
+    const treeLayout = tree().size([height, width]);
 
     const linkGenerator = linkHorizontal()
       .x(link => link.y)
