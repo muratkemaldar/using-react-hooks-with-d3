@@ -1,18 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { select, hierarchy, tree, linkHorizontal } from "d3";
 import useResizeObserver from "./useResizeObserver";
-
-/**
- * Hook, that returns the last used value.
- */
-
-function usePrevious(value) {
-  const ref = useRef();
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-}
+import usePrevious from "./usePrevious";
 
 /**
  * Component that renders a tree.
