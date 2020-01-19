@@ -1,14 +1,14 @@
 import React, { useRef, useEffect, useState } from "react";
 import {
   select,
-  brushX,
   scaleLinear,
   line,
   max,
-  event,
   curveCardinal,
   axisBottom,
-  axisLeft
+  axisLeft,
+  brushX,
+  event
 } from "d3";
 import useResizeObserver from "./useResizeObserver";
 import usePrevious from "./usePrevious";
@@ -21,8 +21,8 @@ function BrushChart({ data }) {
   const svgRef = useRef();
   const wrapperRef = useRef();
   const dimensions = useResizeObserver(wrapperRef);
-  const [selection, setSelection] = useState([0, 1.2]);
-  const prevSelection = usePrevious(selection);
+  const [selection, setSelection] = useState([0, 1.5]);
+  const previousSelection = usePrevious(selection);
 
   // will be called initially and on every data change
   useEffect(() => {
@@ -54,42 +54,20 @@ function BrushChart({ data }) {
       .attr("fill", "none")
       .attr("d", lineGenerator);
 
-    const myDots = svg
+    svg
       .selectAll(".myDot")
       .data(data)
       .join("circle")
       .attr("class", "myDot")
       .attr("stroke", "black")
+      .attr("r", (value, index) =>
+        index >= selection[0] && index <= selection[1] ? 4 : 2
+      )
+      .attr("fill", (value, index) =>
+        index >= selection[0] && index <= selection[1] ? "orange" : "black"
+      )
       .attr("cx", (value, index) => xScale(index))
       .attr("cy", yScale);
-
-    // brush
-    const brush = brushX()
-      .extent([
-        [0, 0],
-        [width, height]
-      ])
-      .on("start brush end", () => {
-        if (event.selection) {
-          const [x0, x1] = event.selection.map(xScale.invert);
-          setSelection([x0, x1]);
-          myDots
-            .transition()
-            .duration(50)
-            .attr("r", (d, index) => (x0 <= index && index <= x1 ? 4 : 2))
-            .attr("fill", (d, index) =>
-              x0 <= index && index <= x1 ? "orange" : "black"
-            );
-        }
-      });
-
-    // init + set brush position
-    if (selection === prevSelection) {
-      svg
-        .select(".brush")
-        .call(brush)
-        .call(brush.move, selection.map(xScale));
-    }
 
     // axes
     const xAxis = axisBottom(xScale);
@@ -100,7 +78,28 @@ function BrushChart({ data }) {
 
     const yAxis = axisLeft(yScale);
     svg.select(".y-axis").call(yAxis);
-  }, [data, dimensions, prevSelection, selection]);
+
+    // brush
+    const brush = brushX()
+      .extent([
+        [0, 0],
+        [width, height]
+      ])
+      .on("start brush end", () => {
+        if (event.selection) {
+          const indexSelection = event.selection.map(xScale.invert);
+          setSelection(indexSelection);
+        }
+      });
+
+    // initial position + retaining position on resize
+    if (previousSelection === selection) {
+      svg
+        .select(".brush")
+        .call(brush)
+        .call(brush.move, selection.map(xScale));
+    }
+  }, [data, dimensions, previousSelection, selection]);
 
   return (
     <React.Fragment>
@@ -115,7 +114,7 @@ function BrushChart({ data }) {
         Selected values: [
         {data
           .filter(
-            (value, index) => selection[0] <= index && index <= selection[1]
+            (value, index) => index >= selection[0] && index <= selection[1]
           )
           .join(", ")}
         ]
