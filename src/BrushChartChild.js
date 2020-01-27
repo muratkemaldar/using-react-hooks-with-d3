@@ -29,11 +29,11 @@ function BrushChart2Child({ data, selection }) {
     // scales + line generator
     const xScale = scaleLinear()
       .domain(selection)
-      .range([0, width]);
+      .range([10, width - 10]);
 
     const yScale = scaleLinear()
       .domain([0, max(data)])
-      .range([height, 0]);
+      .range([height - 10, 10]);
 
     const lineGenerator = line()
       .x((d, index) => xScale(index))
@@ -81,11 +81,11 @@ function BrushChart2Child({ data, selection }) {
       <div ref={wrapperRef} style={{ marginBottom: "2rem" }}>
         <svg ref={svgRef}>
           <defs>
-            <clipPath id="cut-off-bottom">
+            <clipPath id="myClipPath">
               <rect x="0" y="0" width="100%" height="100%" />
             </clipPath>
           </defs>
-          <g className="content"></g>
+          <g className="content" clipPath="url(#myClipPath)"></g>
           <g className="x-axis" />
           <g className="y-axis" />
         </svg>

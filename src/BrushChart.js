@@ -5,10 +5,10 @@ import {
   line,
   max,
   curveCardinal,
-  axisBottom,
-  axisLeft,
   brushX,
-  event
+  event,
+  axisBottom,
+  axisLeft
 } from "d3";
 import useResizeObserver from "./useResizeObserver";
 import usePrevious from "./usePrevious";
@@ -17,7 +17,7 @@ import usePrevious from "./usePrevious";
  * Component that renders a BrushChart
  */
 
-function BrushChart({ data }) {
+function BrushChart({ data, children }) {
   const svgRef = useRef();
   const wrapperRef = useRef();
   const dimensions = useResizeObserver(wrapperRef);
@@ -33,11 +33,11 @@ function BrushChart({ data }) {
     // scales + line generator
     const xScale = scaleLinear()
       .domain([0, data.length - 1])
-      .range([0, width]);
+      .range([10, width - 10]);
 
     const yScale = scaleLinear()
       .domain([0, max(data)])
-      .range([height, 0]);
+      .range([height - 10, 10]);
 
     const lineGenerator = line()
       .x((d, index) => xScale(index))
@@ -105,20 +105,12 @@ function BrushChart({ data }) {
     <React.Fragment>
       <div ref={wrapperRef} style={{ marginBottom: "2rem" }}>
         <svg ref={svgRef}>
+          <g className="brush" />
           <g className="x-axis" />
           <g className="y-axis" />
-          <g className="brush" />
         </svg>
       </div>
-      <small style={{ marginBottom: "1rem" }}>
-        Selected values: [
-        {data
-          .filter(
-            (value, index) => index >= selection[0] && index <= selection[1]
-          )
-          .join(", ")}
-        ]
-      </small>
+      {children(selection)}
     </React.Fragment>
   );
 }

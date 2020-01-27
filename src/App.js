@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 // import Video from "./Video";
 import "./App.css";
-import BrushChart2 from "./BrushChart2";
-import BrushChart2Child from "./BrushChart2Child";
+import BrushChart from "./BrushChart";
+import BrushChartChild from "./BrushChartChild";
 
 function App() {
   const [data, setData] = useState(
@@ -13,11 +13,11 @@ function App() {
 
   return (
     <React.Fragment>
-      <h2>Sub-selections with d3-brush</h2>
+      <h2>Visually filtering data with d3-brush</h2>
 
-      <BrushChart2 data={data}>
-        {selection => <BrushChart2Child data={data} selection={selection} />}
-      </BrushChart2>
+      <BrushChart data={data}>
+        {selection => <BrushChartChild data={data} selection={selection} />}
+      </BrushChart>
       <button onClick={onAddDataClick}>Add data</button>
 
       {/* <Video /> */}
