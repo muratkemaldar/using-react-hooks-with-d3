@@ -18,7 +18,7 @@ svg rect.selection {
   align-items: stretch;
   justify-content: center;
   height: 100vh;
-  padding: 0 50px 150px;
+  padding: 0 50px;
   text-align: center;
   box-sizing: border-box;
 }
@@ -36,6 +36,10 @@ video {
   right: 0;
   top: auto;
   width: 100%;
+}
+
+.fields {
+  margin-bottom: 1rem;
 }
 
 .field {

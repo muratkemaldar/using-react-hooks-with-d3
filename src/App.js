@@ -1,39 +1,7 @@
 import React, { useState } from "react";
 import "./App.css";
+import StackedAreaChart from "./StackedAreaChart";
 import StackedBarChart from "./StackedBarChart";
-
-const data = [
-  {
-    year: 1980,
-    "🥑": 10,
-    "🍌": 20,
-    "🍆": 30
-  },
-  {
-    year: 1990,
-    "🥑": 20,
-    "🍌": 40,
-    "🍆": 60
-  },
-  {
-    year: 2000,
-    "🥑": 30,
-    "🍌": 45,
-    "🍆": 80
-  },
-  {
-    year: 2010,
-    "🥑": 40,
-    "🍌": 60,
-    "🍆": 100
-  },
-  {
-    year: 2020,
-    "🥑": 50,
-    "🍌": 80,
-    "🍆": 120
-  }
-];
 
 const allKeys = ["🥑", "🍌", "🍆"];
 
@@ -45,9 +13,43 @@ const colors = {
 
 function App() {
   const [keys, setKeys] = useState(allKeys);
+  const [data, setData] = useState([
+    {
+      year: 1980,
+      "🥑": 10,
+      "🍌": 20,
+      "🍆": 30
+    },
+    {
+      year: 1990,
+      "🥑": 20,
+      "🍌": 40,
+      "🍆": 60
+    },
+    {
+      year: 2000,
+      "🥑": 30,
+      "🍌": 45,
+      "🍆": 80
+    },
+    {
+      year: 2010,
+      "🥑": 40,
+      "🍌": 60,
+      "🍆": 100
+    },
+    {
+      year: 2020,
+      "🥑": 50,
+      "🍌": 80,
+      "🍆": 120
+    }
+  ]);
+
   return (
     <React.Fragment>
-      <h2>Stacked Bar Chart with D3 </h2>
+      <h2>Stacked Area Chart with D3 </h2>
+      <StackedAreaChart data={data} keys={keys} colors={colors} />
       <StackedBarChart data={data} keys={keys} colors={colors} />
 
       <div className="fields">
@@ -71,6 +73,22 @@ function App() {
           </div>
         ))}
       </div>
+
+      <button
+        onClick={() =>
+          setData([
+            ...data,
+            {
+              year: Math.max(...data.map(d => d.year)) + 10,
+              "🥑": Math.round(Math.random() * 100),
+              "🍌": Math.round(Math.random() * 125),
+              "🍆": Math.round(Math.random() * 150)
+            }
+          ])
+        }
+      >
+        Add data
+      </button>
     </React.Fragment>
   );
 }
