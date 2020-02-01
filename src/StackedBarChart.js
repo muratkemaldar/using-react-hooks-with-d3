@@ -1,15 +1,14 @@
+import React, { useEffect, useRef } from "react";
 import {
+  select,
+  scaleBand,
+  axisBottom,
+  stack,
   max,
   scaleLinear,
-  scaleBand,
-  select,
-  stack,
-  axisBottom,
   axisLeft,
-  scaleOrdinal,
   stackOrderAscending
 } from "d3";
-import React, { useEffect, useRef } from "react";
 import useResizeObserver from "./useResizeObserver";
 
 /**
@@ -27,38 +26,40 @@ function StackedBarChart({ data, keys, colors }) {
     const { width, height } =
       dimensions || wrapperRef.current.getBoundingClientRect();
 
+    // stacks / layers
     const stackGenerator = stack()
       .keys(keys)
       .order(stackOrderAscending);
-    const series = stackGenerator(data);
+    const layers = stackGenerator(data);
+    const extent = [
+      0,
+      max(layers, layer => max(layer, sequence => sequence[1]))
+    ];
 
-    // scales + line generator
+    // scales
     const xScale = scaleBand()
-      .domain(data.map(value => value.year))
+      .domain(data.map(d => d.year))
       .range([0, width])
-      .padding(0.2);
+      .padding(0.25);
 
     const yScale = scaleLinear()
-      .domain([0, max(series, d => max(d, d => d[1]))])
+      .domain(extent)
       .range([height, 0]);
 
-    const colorScale = scaleOrdinal()
-      .domain(Object.keys(colors))
-      .range(Object.values(colors));
-
+    // rendering
     svg
-      .selectAll(".year")
-      .data(series)
+      .selectAll(".layer")
+      .data(layers)
       .join("g")
-      .attr("class", "year")
-      .attr("fill", d => colorScale(d.key))
+      .attr("class", "layer")
+      .attr("fill", layer => colors[layer.key])
       .selectAll("rect")
-      .data(d => d)
+      .data(layer => layer)
       .join("rect")
-      .attr("x", (d, i) => xScale(d.data.year))
+      .attr("x", sequence => xScale(sequence.data.year))
       .attr("width", xScale.bandwidth())
-      .attr("y", d => yScale(d[1]))
-      .attr("height", d => yScale(d[0]) - yScale(d[1]));
+      .attr("y", sequence => yScale(sequence[1]))
+      .attr("height", sequence => yScale(sequence[0]) - yScale(sequence[1]));
 
     // axes
     const xAxis = axisBottom(xScale);

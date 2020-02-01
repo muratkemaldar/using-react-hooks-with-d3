@@ -65,7 +65,7 @@ function App() {
                 }
               }}
             />
-            <label for={key} style={{ color: colors[key] }}>
+            <label htmlFor={key} style={{ color: colors[key] }}>
               {key}
             </label>
           </div>
