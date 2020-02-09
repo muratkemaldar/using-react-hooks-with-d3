@@ -6,18 +6,18 @@ import {
   max,
   scaleLinear,
   axisLeft,
+  stackOrderAscending,
   area,
   scalePoint,
-  curveCardinal,
-  stackOrderAscending
+  curveCardinal
 } from "d3";
 import useResizeObserver from "./useResizeObserver";
 
 /**
- * Component that renders a StackedAreaChart
+ * Component that renders a StackedBarChart
  */
 
-function StackedAreaChart({ data, keys, colors }) {
+function StackedBarChart({ data, keys, colors }) {
   const svgRef = useRef();
   const wrapperRef = useRef();
   const dimensions = useResizeObserver(wrapperRef);
@@ -38,12 +38,6 @@ function StackedAreaChart({ data, keys, colors }) {
       max(layers, layer => max(layer, sequence => sequence[1]))
     ];
 
-    const areaGenerator = area()
-      .x(d => xScale(d.data.year))
-      .y0(d => yScale(d[0]))
-      .y1(d => yScale(d[1]))
-      .curve(curveCardinal);
-
     // scales
     const xScale = scalePoint()
       .domain(data.map(d => d.year))
@@ -53,17 +47,20 @@ function StackedAreaChart({ data, keys, colors }) {
       .domain(extent)
       .range([height, 0]);
 
+    // area generator
+    const areaGenerator = area()
+      .x(sequence => xScale(sequence.data.year))
+      .y0(sequence => yScale(sequence[0]))
+      .y1(sequence => yScale(sequence[1]))
+      .curve(curveCardinal);
+
     // rendering
     svg
       .selectAll(".layer")
       .data(layers)
-      .join("g")
+      .join("path")
       .attr("class", "layer")
       .attr("fill", layer => colors[layer.key])
-      .selectAll(".area")
-      .data(layer => [layer])
-      .join("path")
-      .attr("class", "area")
       .attr("d", areaGenerator);
 
     // axes
@@ -89,4 +86,4 @@ function StackedAreaChart({ data, keys, colors }) {
   );
 }
 
-export default StackedAreaChart;
+export default StackedBarChart;
