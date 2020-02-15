@@ -82,7 +82,7 @@ function ZoomableLineChart({ data, id = "myZoomableLineChart" }) {
 
     // zoom
     const zoomBehavior = zoom()
-      .scaleExtent([1, 2])
+      .scaleExtent([0.5, 5])
       .translateExtent([
         [-100, 0],
         [width + 100, height]
