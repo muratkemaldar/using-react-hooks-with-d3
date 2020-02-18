@@ -20,7 +20,7 @@ function ZoomableLineChart({ data, id = "myZoomableLineChart" }) {
   const svgRef = useRef();
   const wrapperRef = useRef();
   const dimensions = useResizeObserver(wrapperRef);
-  const [currentZoom, setCurrentZoom] = useState();
+  const [currentZoomState, setCurrentZoomState] = useState();
 
   // will be called initially and on every data change
   useEffect(() => {
@@ -34,10 +34,9 @@ function ZoomableLineChart({ data, id = "myZoomableLineChart" }) {
       .domain([0, data.length - 1])
       .range([10, width - 10]);
 
-    if (currentZoom) {
-      const adjustedXScale = currentZoom.rescaleX(xScale);
-      xScale.domain(adjustedXScale.domain());
-      xScale.range(adjustedXScale.range());
+    if (currentZoomState) {
+      const newXScale = currentZoomState.rescaleX(xScale);
+      xScale.domain(newXScale.domain());
     }
 
     const yScale = scaleLinear()
@@ -84,16 +83,16 @@ function ZoomableLineChart({ data, id = "myZoomableLineChart" }) {
     const zoomBehavior = zoom()
       .scaleExtent([0.5, 5])
       .translateExtent([
-        [-100, 0],
-        [width + 100, height]
+        [0, 0],
+        [width, height]
       ])
       .on("zoom", () => {
         const zoomState = zoomTransform(svg.node());
-        setCurrentZoom(zoomState);
+        setCurrentZoomState(zoomState);
       });
 
     svg.call(zoomBehavior);
-  }, [currentZoom, data, dimensions]);
+  }, [currentZoomState, data, dimensions]);
 
   return (
     <React.Fragment>
