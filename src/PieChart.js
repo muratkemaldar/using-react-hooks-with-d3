@@ -21,7 +21,7 @@ function PieChart({ data }) {
     // pie will transform data to instructions for arcGenerator
     const pieGenerator = pie()
       .value(d => d.value)
-      .sort(null);
+      .sort(null); // makes sure data doesn't get sorted
 
     // now transform data to instructions for arc()
     const instructions = pieGenerator(data);
