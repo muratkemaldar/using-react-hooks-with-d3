@@ -1,5 +1,5 @@
 {
-  "name": "16-zoomable-line-chart",
+  "name": "04-bar-chart-negative-values",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

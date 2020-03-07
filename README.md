@@ -1,17 +1,13 @@
-# Using React (Hooks) with D3 - [16] Zoomable Line Chart
+# Using React (Hooks) with D3 - Bar Chart with negative values
 
-This is the code of the video tutorial series "Using React (Hooks) with D3".
-
-Each tutorial session is saved within a branch,
-so if you wanna work with the code from this repo, checkout the branches!
-
-This session is about adding a zoom behavior to a line chart!
+This is a special variation branch without a video episode attached, as a request for Sam Henderson.
+This branch shows how to create a bar chart with D3 / React, where you also have negative values. Unlike the other 04-branch, this bar chart has no animations at the moment.
 
 ## Getting Started
 
 `git clone git@github.com:muratkemaldar/using-react-hooks-with-d3.git`
 
-`git checkout 16-zoomable-line-chart`
+`git checkout 04-bar-chart-negative-values`
 
 `npm install`
 
