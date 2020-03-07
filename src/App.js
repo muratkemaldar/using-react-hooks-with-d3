@@ -1,21 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import "./App.css";
-import ZoomableLineChart from "./ZoomableLineChart";
+import BarChartNegativeValues from "./BarChartNegativeValues";
 
 function App() {
-  const [data, setData] = useState(
-    Array.from({ length: 50 }, () => Math.round(Math.random() * 100))
-  );
+  const data = [10, 30, -40, 50, -20, 70];
 
   return (
     <React.Fragment>
-      <h2>Zoomable Line Chart with D3 </h2>
-      <ZoomableLineChart data={data} />
-      <button
-        onClick={() => setData([...data, Math.round(Math.random() * 100)])}
-      >
-        Add data
-      </button>
+      <h2>Bar Chart: Negative Values </h2>
+      <BarChartNegativeValues data={data} />
     </React.Fragment>
   );
 }
