@@ -11,7 +11,7 @@ This session is about wrapping things up, and talking about the most important t
 
 `git clone git@github.com:muratkemaldar/using-react-hooks-with-d3.git`
 
-`git checkout 16-zoomable-line-chart`
+`git checkout 17-finale`
 
 `npm install`
 
