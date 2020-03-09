@@ -1,11 +1,11 @@
-# Using React (Hooks) with D3 - [16] Zoomable Line Chart
+# Using React (Hooks) with D3 - [Finale] Top 5 Things To Remember
 
 This is the code of the video tutorial series "Using React (Hooks) with D3".
 
 Each tutorial session is saved within a branch,
 so if you wanna work with the code from this repo, checkout the branches!
 
-This session is about adding a zoom behavior to a line chart!
+This session is about wrapping things up, and talking about the most important things that you should remember, moving on!
 
 ## Getting Started
 
