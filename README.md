@@ -1,4 +1,4 @@
-# Using React (Hooks) with D3 - [Finale] Top 5 Things To Remember
+# Using React (Hooks) with D3 - [Finale] 5 Things You Should Know
 
 This is the code of the video tutorial series "Using React (Hooks) with D3".
 
