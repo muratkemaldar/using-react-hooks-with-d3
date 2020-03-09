@@ -1,21 +1,18 @@
 import React, { useState } from "react";
+import Finale from "./Finale";
+import Video from "./Video";
 import "./App.css";
-import ZoomableLineChart from "./ZoomableLineChart";
 
 function App() {
-  const [data, setData] = useState(
-    Array.from({ length: 50 }, () => Math.round(Math.random() * 100))
-  );
-
+  const [data, setData] = useState([10, 25, 50, 30, 120]);
   return (
     <React.Fragment>
-      <h2>Zoomable Line Chart with D3 </h2>
-      <ZoomableLineChart data={data} />
-      <button
-        onClick={() => setData([...data, Math.round(Math.random() * 100)])}
-      >
-        Add data
+      <h2>Using React (Hooks) with D3: Finale </h2>
+      <Finale data={data} />
+      <button onClick={() => setData(data.map(value => value + 5))}>
+        Update data
       </button>
+      <Video />
     </React.Fragment>
   );
 }
