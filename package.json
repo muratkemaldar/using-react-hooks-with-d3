@@ -6,7 +6,7 @@
     "d3": "^6.2.0",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
-    "react-scripts": "3.2.0"
+    "react-scripts": "^3.4.3"
   },
   "scripts": {
     "start": "react-scripts start",
