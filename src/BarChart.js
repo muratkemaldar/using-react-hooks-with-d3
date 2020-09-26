@@ -2,12 +2,12 @@ import React, { useRef, useEffect, useState } from "react";
 import { select, axisBottom, axisRight, scaleLinear, scaleBand } from "d3";
 import ResizeObserver from "resize-observer-polyfill";
 
-const useResizeObserver = ref => {
+const useResizeObserver = (ref) => {
   const [dimensions, setDimensions] = useState(null);
   useEffect(() => {
     const observeTarget = ref.current;
-    const resizeObserver = new ResizeObserver(entries => {
-      entries.forEach(entry => {
+    const resizeObserver = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
         setDimensions(entry.contentRect);
       });
     });
@@ -70,11 +70,14 @@ function BarChart({ data }) {
       .attr("x", (value, index) => xScale(index))
       .attr("y", -dimensions.height)
       .attr("width", xScale.bandwidth())
-      .on("mouseenter", (value, index) => {
+      .on("mouseenter", function (event, value) {
+        // events have changed in d3 v6:
+        // https://observablehq.com/@d3/d3v6-migration-guide#events
+        const index = svg.selectAll(".bar").nodes().indexOf(this);
         svg
           .selectAll(".tooltip")
           .data([value])
-          .join(enter => enter.append("text").attr("y", yScale(value) - 4))
+          .join((enter) => enter.append("text").attr("y", yScale(value) - 4))
           .attr("class", "tooltip")
           .text(value)
           .attr("x", xScale(index) + xScale.bandwidth() / 2)
@@ -86,7 +89,7 @@ function BarChart({ data }) {
       .on("mouseleave", () => svg.select(".tooltip").remove())
       .transition()
       .attr("fill", colorScale)
-      .attr("height", value => dimensions.height - yScale(value));
+      .attr("height", (value) => dimensions.height - yScale(value));
   }, [data, dimensions]);
 
   return (
