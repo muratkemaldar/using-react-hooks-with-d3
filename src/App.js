@@ -16,9 +16,7 @@ function App() {
       .range([0, 300])
       .padding(0.5);
 
-    const yScale = scaleLinear()
-      .domain([0, 150])
-      .range([150, 0]);
+    const yScale = scaleLinear().domain([0, 150]).range([150, 0]);
 
     const colorScale = scaleLinear()
       .domain([75, 100, 150])
@@ -27,17 +25,11 @@ function App() {
 
     // create x-axis
     const xAxis = axisBottom(xScale).ticks(data.length);
-    svg
-      .select(".x-axis")
-      .style("transform", "translateY(150px)")
-      .call(xAxis);
+    svg.select(".x-axis").style("transform", "translateY(150px)").call(xAxis);
 
     // create y-axis
     const yAxis = axisRight(yScale);
-    svg
-      .select(".y-axis")
-      .style("transform", "translateX(300px)")
-      .call(yAxis);
+    svg.select(".y-axis").style("transform", "translateX(300px)").call(yAxis);
 
     // draw the bars
     svg
@@ -49,11 +41,14 @@ function App() {
       .attr("x", (value, index) => xScale(index))
       .attr("y", -150)
       .attr("width", xScale.bandwidth())
-      .on("mouseenter", (value, index) => {
+      .on("mouseenter", function (event, value) {
+        // events have changed in d3 v6:
+        // https://observablehq.com/@d3/d3v6-migration-guide#events
+        const index = svg.selectAll(".bar").nodes().indexOf(this);
         svg
           .selectAll(".tooltip")
           .data([value])
-          .join(enter => enter.append("text").attr("y", yScale(value) - 4))
+          .join((enter) => enter.append("text").attr("y", yScale(value) - 4))
           .attr("class", "tooltip")
           .text(value)
           .attr("x", xScale(index) + xScale.bandwidth() / 2)
@@ -65,7 +60,7 @@ function App() {
       .on("mouseleave", () => svg.select(".tooltip").remove())
       .transition()
       .attr("fill", colorScale)
-      .attr("height", value => 150 - yScale(value));
+      .attr("height", (value) => 150 - yScale(value));
   }, [data]);
 
   return (
@@ -74,10 +69,10 @@ function App() {
         <g className="x-axis" />
         <g className="y-axis" />
       </svg>
-      <button onClick={() => setData(data.map(value => value + 5))}>
+      <button onClick={() => setData(data.map((value) => value + 5))}>
         Update data
       </button>
-      <button onClick={() => setData(data.filter(value => value < 35))}>
+      <button onClick={() => setData(data.filter((value) => value < 35))}>
         Filter data
       </button>
       <button
