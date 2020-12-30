@@ -8,7 +8,6 @@ import {
   axisBottom,
   axisLeft,
   brushX,
-  event
 } from "d3";
 import useResizeObserver from "./useResizeObserver";
 import usePrevious from "./usePrevious";
@@ -41,7 +40,7 @@ function BrushChart({ data }) {
 
     const lineGenerator = line()
       .x((d, index) => xScale(index))
-      .y(d => yScale(d))
+      .y((d) => yScale(d))
       .curve(curveCardinal);
 
     // render the line
@@ -83,9 +82,9 @@ function BrushChart({ data }) {
     const brush = brushX()
       .extent([
         [0, 0],
-        [width, height]
+        [width, height],
       ])
-      .on("start brush end", () => {
+      .on("start brush end", (event) => {
         if (event.selection) {
           const indexSelection = event.selection.map(xScale.invert);
           setSelection(indexSelection);
@@ -94,10 +93,7 @@ function BrushChart({ data }) {
 
     // initial position + retaining position on resize
     if (previousSelection === selection) {
-      svg
-        .select(".brush")
-        .call(brush)
-        .call(brush.move, selection.map(xScale));
+      svg.select(".brush").call(brush).call(brush.move, selection.map(xScale));
     }
   }, [data, dimensions, previousSelection, selection]);
 
