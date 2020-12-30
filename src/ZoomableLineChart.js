@@ -8,7 +8,6 @@ import {
   axisBottom,
   axisLeft,
   zoom,
-  zoomTransform
 } from "d3";
 import useResizeObserver from "./useResizeObserver";
 
@@ -45,7 +44,7 @@ function ZoomableLineChart({ data, id = "myZoomableLineChart" }) {
 
     const lineGenerator = line()
       .x((d, index) => xScale(index))
-      .y(d => yScale(d))
+      .y((d) => yScale(d))
       .curve(curveCardinal);
 
     // render the line
@@ -84,10 +83,10 @@ function ZoomableLineChart({ data, id = "myZoomableLineChart" }) {
       .scaleExtent([0.5, 5])
       .translateExtent([
         [0, 0],
-        [width, height]
+        [width, height],
       ])
-      .on("zoom", () => {
-        const zoomState = zoomTransform(svg.node());
+      .on("zoom", (event) => {
+        const zoomState = event.transform;
         setCurrentZoomState(zoomState);
       });
 
