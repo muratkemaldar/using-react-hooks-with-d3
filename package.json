@@ -1,9 +1,9 @@
 {
-  "name": "04-bar-chart-animated",
+  "name": "05-interactivity-basic",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "d3": "^6.2.0",
+    "d3": "^6.3.1",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-scripts": "^3.4.3"

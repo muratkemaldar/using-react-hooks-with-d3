@@ -41,10 +41,10 @@ function App() {
       .attr("x", (value, index) => xScale(index))
       .attr("y", -150)
       .attr("width", xScale.bandwidth())
-      .on("mouseenter", function (event, value) {
+      .on("mouseenter", (event, value) => {
         // events have changed in d3 v6:
         // https://observablehq.com/@d3/d3v6-migration-guide#events
-        const index = svg.selectAll(".bar").nodes().indexOf(this);
+        const index = svg.selectAll(".bar").nodes().indexOf(event.target);
         svg
           .selectAll(".tooltip")
           .data([value])
