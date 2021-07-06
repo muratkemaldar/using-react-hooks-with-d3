@@ -11,6 +11,8 @@ This session is about creating a world map with D3-geo.
 
 `git clone git@github.com:muratkemaldar/using-react-hooks-with-d3.git`
 
+`cd using-react-hooks-with-d3/`
+
 `git checkout 12-geo`
 
 `npm install`
