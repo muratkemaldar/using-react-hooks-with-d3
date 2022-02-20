@@ -4,7 +4,7 @@ import {
   hierarchy,
   forceSimulation,
   forceManyBody,
-  mouse,
+  pointer,
   forceX,
   forceY,
   forceCollide,
@@ -91,8 +91,8 @@ function ForceTreeChart({ data }) {
           .attr("y", node => node.y);
       });
 
-    svg.on("mousemove", () => {
-      const [x, y] = mouse(svgRef.current);
+    svg.on("mousemove", (event) => {
+      const [x, y] = pointer(event);
       simulation
         .force(
           "x",
@@ -104,8 +104,8 @@ function ForceTreeChart({ data }) {
         );
     });
 
-    svg.on("click", () => {
-      const [x, y] = mouse(svgRef.current);
+    svg.on("click", (event) => {
+      const [x, y] = pointer(event);
       simulation
         .alpha(0.5)
         .restart()

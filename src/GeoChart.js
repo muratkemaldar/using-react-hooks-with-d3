@@ -41,7 +41,7 @@ function GeoChart({ data, property }) {
       .selectAll(".country")
       .data(data.features)
       .join("path")
-      .on("click", feature => {
+      .on("click", (event, feature) => {
         setSelectedCountry(selectedCountry === feature ? null : feature);
       })
       .attr("class", "country")
